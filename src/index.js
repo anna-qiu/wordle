@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import './board.css';
-import App from './App';
+import './keyboard.css';
 import reportWebVitals from './reportWebVitals';
 import { Game } from './game';
 
@@ -11,7 +11,6 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    {/* <App /> */}
     <Game />
   </React.StrictMode>
 )

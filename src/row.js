@@ -12,8 +12,11 @@ export class Row extends React.Component {
   }
 
   computeType(i) {
-    if (this.props.guess.length === 0 || this.props.incomplete)
-      return "incomplete";
+    if (this.props.guess.length === 0)
+      return "empty";
+    
+    if(this.props.incomplete)
+      return i < this.props.guess.length ? "incomplete" : "empty";
 
     if (this.props.guess.length > 0 
       && this.props.guess[i] === this.props.word[i])

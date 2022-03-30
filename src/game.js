@@ -1,5 +1,7 @@
 import React from 'react';
 import { Board } from './board';
+import { Keyboard } from './keyboard';
+import { VALID_GUESSES } from './valid';
 
 export class Game extends React.Component {
   constructor(props) {
@@ -38,8 +40,21 @@ export class Game extends React.Component {
         currentGuess={this.state.currentGuess} />);
     }
     
+    const defaultClick = key => () => {
+      this.setState({
+        ...this.state,
+        currentGuess: this.state.currentGuess.length < 5 ? this.state.currentGuess + key.toUpperCase() : this.state.currentGuess
+      });
+    }
+
+    const specialClicks = {
+      "Enter": () => this.checkEnter(),
+      "Delete": () => this.deleteLetter()
+    }
+
     return (<div className='game'>
-      {boards}
+      <div className='boards'>{boards}</div>
+      <Keyboard defaultClick={defaultClick} specialClicks={specialClicks} />
     </div>);
   }
 
@@ -52,27 +67,36 @@ export class Game extends React.Component {
           currentGuess: this.state.currentGuess.length < 5 ? this.state.currentGuess + e.key.toUpperCase() : this.state.currentGuess
         })
       }
-      else if (e.key === "Backspace" || e.key === "Clear" || e.key == "Delete") {
-        this.setState({
-          ...this.state,
-          currentGuess: this.state.currentGuess.substring(0, this.state.currentGuess.length - 1)
-        })
+      else if (e.key === "Backspace" || e.key === "Clear" || e.key === "Delete") {
+        this.deleteLetter();
       }
       else if (e.key === "Enter") {
-        if (this.state.currentGuess.length === 5) {
-          this.setState({
-            ...this.state,
-            guesses: this.state.guesses.concat(this.state.currentGuess),
-            currentGuess: ''
-          })
-        }
-        else {
-          this.setState({
-            ...this.state,
-            currentGuess: ''
-          })
-        }
+        this.checkEnter();
       }
     }
+  }
+
+  checkEnter() {
+    if (this.state.currentGuess.length === 5){ 
+      if (VALID_GUESSES.includes(this.state.currentGuess.toLowerCase())) {
+        this.setState({
+          ...this.state,
+          guesses: this.state.guesses.concat(this.state.currentGuess),
+          currentGuess: ''
+        })
+      } else {
+        this.setState({
+          ...this.state,
+          currentGuess: ''
+        })
+      }
+    }
+  }
+
+  deleteLetter() {
+    this.setState({
+      ...this.state,
+      currentGuess: this.state.currentGuess.substring(0, this.state.currentGuess.length - 1)
+    })
   }
 }
