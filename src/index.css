@@ -2,6 +2,8 @@
 
 body {
   margin: 0;
+  /* min-height: 100vh; */
+  position: relative;
   font-family: 'Open Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -10,4 +12,18 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.game {
+  margin-top: 1em;
+  min-height: calc(100vh - 5em);
+}
+
+.footer {
+  /* position: absolute; */
+  /* bottom: 2em; */
+  font-size: 0.8em;
+  text-align: center;
+  margin: 2em auto;
+  line-height: 1em;
 }

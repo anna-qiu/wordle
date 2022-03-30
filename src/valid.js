@@ -7097,6 +7097,7 @@ export const VALID_GUESSES = [
   'moong',
   'moons',
   'moony',
+  'moooo',
   'mooos',
   'moops',
   'moors',

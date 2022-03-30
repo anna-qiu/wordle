@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import './board.css';
 import './keyboard.css';
+import './popup.css';
 import reportWebVitals from './reportWebVitals';
 import { Game } from './game';
+import { Footer } from './footer';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root')
@@ -12,6 +14,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Game />
+    <Footer />
   </React.StrictMode>
 )
 

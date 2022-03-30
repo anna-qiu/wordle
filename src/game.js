@@ -1,6 +1,7 @@
 import React from 'react';
 import { Board } from './board';
 import { Keyboard } from './keyboard';
+import { Popup } from './popup';
 import { VALID_GUESSES } from './valid';
 
 export class Game extends React.Component {
@@ -8,8 +9,11 @@ export class Game extends React.Component {
     super(props);
 
     this.state = {
+      words: this.generateWords().map(w => w.toUpperCase()),
       guesses: [],
-      currentGuess: ''
+      currentGuess: '',
+      popupText: '',
+      popupTimer: null
     }
   }
 
@@ -26,12 +30,17 @@ export class Game extends React.Component {
   }
 
   render() {
-    const words = this.generateWords().map(w => w.toUpperCase());
-    console.log('words', words);
+    // const words = this.generateWords().map(w => w.toUpperCase());
+    // this.setState({
+    //   ...this.state,
+    //   words: words
+    // });
+    const words = this.state.words;
+    // console.log('words', words);
 
     const boards = [];
     for (let i = 0; i < words.length; i++) {
-      console.log('word', words[i]);
+      // console.log('word', words[i]);
       boards.push(<Board 
         key={`board-${i}`} 
         numRows={7} 
@@ -53,6 +62,7 @@ export class Game extends React.Component {
     }
 
     return (<div className='game'>
+      <Popup text={this.state.popupText}></Popup>
       <div className='boards'>{boards}</div>
       <Keyboard defaultClick={defaultClick} specialClicks={specialClicks} />
     </div>);
@@ -60,7 +70,7 @@ export class Game extends React.Component {
 
   componentDidMount() {
     document.onkeydown = e => {
-      console.log(e.key);
+      // console.log(e.key);
       if (!e.isComposing && e.key.length === 1 && e.key.match(/[a-z]/i)) {
         this.setState({
           ...this.state,
@@ -76,20 +86,45 @@ export class Game extends React.Component {
     }
   }
 
+  showPopup(text) {
+    if (this.state.popupTimer != null) {
+      clearTimeout(this.state.popupTimer);
+    }
+
+    this.setState({
+      ...this.state,
+      popupText: text,
+      popupTimer: setTimeout(() => {
+        this.setState({
+          ...this.state,
+          popupText: '',
+          popupTimer: null
+        })
+      }, 1500)
+    })
+  }
+
   checkEnter() {
-    if (this.state.currentGuess.length === 5){ 
+    if (this.state.guesses.length >= 7)
+      return;
+
+    if (this.state.currentGuess.length === 5) {
       if (VALID_GUESSES.includes(this.state.currentGuess.toLowerCase())) {
         this.setState({
           ...this.state,
           guesses: this.state.guesses.concat(this.state.currentGuess),
           currentGuess: ''
+        }, () => {
+          console.log(this.state.guesses);
+          if (this.state.guesses.length === 7) {
+            this.showPopup(`the words were ${this.state.words.join(" and ")}`);
+          }
         })
       } else {
-        this.setState({
-          ...this.state,
-          currentGuess: ''
-        })
+        this.showPopup("not in word list");
       }
+    } else {
+      this.showPopup("not enough letters");
     }
   }
 
