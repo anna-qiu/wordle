@@ -69,6 +69,13 @@ export class Game extends React.Component {
   }
 
   componentDidMount() {
+    if (window.localStorage.getItem("15210-dordle")) {
+      this.setState({
+        ...this.state,
+        guesses: JSON.parse(window.localStorage.getItem("15210-dordle"))
+      })
+    }
+
     document.onkeydown = e => {
       // console.log(e.key);
       if (!e.isComposing && e.key.length === 1 && e.key.match(/[a-z]/i)) {
@@ -107,6 +114,9 @@ export class Game extends React.Component {
   checkEnter() {
     if (this.state.guesses.length >= 7)
       return;
+    
+    if (this.state.words.every(word => this.state.guesses.includes(word.toUpperCase())))
+      return;
 
     if (this.state.currentGuess.length === 5) {
       if (VALID_GUESSES.includes(this.state.currentGuess.toLowerCase())) {
@@ -116,6 +126,7 @@ export class Game extends React.Component {
           currentGuess: ''
         }, () => {
           console.log(this.state.guesses);
+          window.localStorage.setItem("15210-dordle", JSON.stringify(this.state.guesses));
           if (this.state.guesses.length === 7) {
             this.showPopup(`the words were ${this.state.words.join(" and ")}`);
           }
